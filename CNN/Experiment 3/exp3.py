@@ -13,7 +13,7 @@ else:
     input_shape = (img_width, img_height, 3)
 
 batch_size = 32
-epochs = 100
+epochs = 1250
 
 train_datagen = ImageDataGenerator(rotation_range=40,
         width_shift_range=0.2,
@@ -45,7 +45,7 @@ val_generator = val_datagen.flow_from_directory(
         target_size=(img_width, img_height))
 
 from keras.models import Sequential, Model
-from keras.layers import Dense, Flatten, Activation
+from keras.layers import Dense, Flatten, Activation, Dropout
 from keras.layers import Conv2D, MaxPooling2D
 
 model = Sequential()
@@ -61,6 +61,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(47, activation='sigmoid'))
 
 model.compile(loss='categorical_crossentropy',
