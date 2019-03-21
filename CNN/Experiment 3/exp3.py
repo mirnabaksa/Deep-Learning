@@ -13,7 +13,7 @@ else:
     input_shape = (img_width, img_height, 3)
 
 batch_size = 32
-epochs = 1250
+epochs = 250
 
 train_datagen = ImageDataGenerator(rotation_range=40,
         width_shift_range=0.2,
@@ -29,20 +29,20 @@ val_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
         './dataset/train', 
 		color_mode="rgb",
-	    batch_size=batch_size,
+	    	batch_size=batch_size,
 		class_mode="categorical",
 		shuffle=True,
 		seed = 42,
-        target_size=(img_width, img_height))
+        	target_size=(img_width, img_height))
 
 val_generator = val_datagen.flow_from_directory(
         './dataset/validation', 
 		color_mode="rgb",
 		class_mode="categorical",
-        batch_size=batch_size,
+        	batch_size=batch_size,
 		shuffle=True,
 		seed = 42,
-        target_size=(img_width, img_height))
+        	target_size=(img_width, img_height))
 
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten, Activation, Dropout
