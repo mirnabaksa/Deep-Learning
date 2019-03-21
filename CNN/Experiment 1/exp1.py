@@ -21,20 +21,20 @@ val_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow_from_directory(
         './dataset/train', 
 		color_mode="rgb",
-	    batch_size=batch_size,
+	    	batch_size=batch_size,
 		class_mode="categorical",
 		shuffle=True,
 		seed = 42,
-        target_size=(img_width, img_height))
+        	target_size=(img_width, img_height))
 
 val_generator = val_datagen.flow_from_directory(
         './dataset/validation', 
 		color_mode="rgb",
 		class_mode="categorical",
-        batch_size=batch_size,
+       	 	batch_size=batch_size,
 		shuffle=True,
 		seed = 42,
-        target_size=(img_width, img_height))
+        	target_size=(img_width, img_height))
 
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten, Activation
@@ -55,7 +55,7 @@ model.add(Dense(47, activation='softmax'))
 model.compile(loss='categorical_crossentropy',
               optimizer='sgd',
               metrics=['accuracy'])
-			  
+
 print(model.summary())
 
 STEP_SIZE_TRAIN = train_generator.n//train_generator.batch_size
@@ -66,8 +66,8 @@ history = model.fit_generator(
         epochs=epochs,
         verbose=1,
         steps_per_epoch=train_generator.n/batch_size,
-		validation_steps=val_generator.n/batch_size,
-		validation_data=val_generator)		
+	validation_steps=val_generator.n/batch_size,
+	validation_data=val_generator)		
 		
 score = model.evaluate_generator(val_generator, steps=1)
 print('validation loss:', score[0])
