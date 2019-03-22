@@ -8,9 +8,11 @@ start = time.time()
 img_width, img_height = 300, 300
 
 if K.image_data_format() == 'channels_first':
-    input_shape = (3, img_width, img_height)
+	input_shape = (3, img_width, img_height)
+	chanDim = 1
 else:
-    input_shape = (img_width, img_height, 3)
+	input_shape = (img_width, img_height, 3)
+	chanDim = -1
 
 batch_size = 32
 epochs = 250
@@ -47,21 +49,40 @@ val_generator = val_datagen.flow_from_directory(
 
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten, Activation, Dropout
-from keras.layers import Conv3D, MaxPooling2D
+from keras.layers import Conv2D, MaxPooling2D, BatchNormalization
 
 model = Sequential()
 
-model.add(Conv3D(128, (3, 3), input_shape=input_shape, activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, (3, 3), padding ="same", input_shape=input_shape, activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
+model.add(MaxPooling2D(pool_size=(3, 3)))
+model.add(Dropout(0.25))
 
-model.add(Conv3D(128, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
+model.add(Conv2D(64, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
 
-model.add(Conv3D(128, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
+model.add(Conv2D(64, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(128, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
+model.add(Conv2D(128, (3, 3), padding ="same", activation='relu'))
+model.add(BatchNormalization(axis=chanDim))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
 
 model.add(Flatten())
-model.add(Dense(256, activation='relu'))
+model.add(Dense(1024, activation='relu'))
+model.add(BatchNormalization())
 model.add(Dropout(0.5))
 model.add(Dense(47, activation='softmax'))
 
@@ -101,9 +122,9 @@ else:
 from keras.models import model_from_json
 
 model_json = model.to_json()
-with open('model2.json', 'w') as json_file:
+with open('model4.json', 'w') as json_file:
         json_file.write(model_json)
-weights_file = "model2.hdf5"
+weights_file = "model4.hdf5"
 model.save_weights(weights_file,overwrite=True)
 
 import matplotlib
@@ -116,7 +137,7 @@ plt.title('model accuracy')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train','validation'], loc='upper left')
-plt.savefig('accuracy_2augbigger.pdf')
+plt.savefig('accuracy_4.pdf')
 plt.close()
 
 # Loss
@@ -126,4 +147,4 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train','validation'], loc='upper left')
-plt.savefig('loss_2augbigger.pdf')
+plt.savefig('loss_4.pdf')
