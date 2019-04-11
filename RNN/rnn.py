@@ -120,10 +120,9 @@ if __name__ == '__main__':
 	#neurons = 512
 
 	drop = 0.0
-	#drop = 0.1
-	#drop = 0.3
 	#drop = 0.5
 	#drop = 0.7
+	#drop = 1
 
 	embedding = 20
 	RNN = LSTM  # GRU
